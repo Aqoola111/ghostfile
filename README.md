@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# GhostFile
 
-## Getting Started
+**GhostFile** is a client-first web utility for inspecting binaries, reading metadata, and stripping sensitive segments—styled like a precision terminal (“Swiss File Knife” for files). The goal is **zero server-side file storage**, **no accounts**, and **maximum work in the browser** (typed arrays, workers, WASM).
 
-First, run the development server:
+> Full product rules, stack choices, and UX constraints live in [`AGENTS.md`](./AGENTS.md). Point Cursor at `@AGENTS.md` when implementing features.
+
+## Current state
+
+The repo is an active scaffold: **Next.js App Router**, **Tailwind CSS v4**, **shadcn/ui** (Radix Vega), and a **Stitch-aligned** dark theme (Space Grotesk + JetBrains Mono, electric lime accent, sharp geometry).
+
+Implemented UI pieces include:
+
+- **File dropzone** (`components/custom/dropzone.tsx`) — `react-dropzone`, brutalist frame, optional GSAP hover copy via `HoverRadialText`.
+- **`HoverRadialText`** — reusable pointer-driven color wave for strings (see file for props).
+- **Button** — GSAP `clip-path` ripple fill from cursor position (disabled for `link` and `asChild`).
+- **Safe mode store** (`store/use-safemode-store.ts`) — minimal Zustand flag for future “safe” pipelines.
+
+Planned capabilities (see `AGENTS.md`): magic-number identification, EXIF / ID3 / GPS, hex view, deep purge (e.g. JPEG APP1), ffmpeg.wasm workflows, and a post-drop engineering dashboard layout.
+
+## Tech stack
+
+| Area        | Choice |
+|------------|--------|
+| Framework  | [Next.js](https://nextjs.org/) 16 (App Router, React 19) |
+| Styling    | Tailwind CSS v4, design tokens in `app/globals.css` |
+| Components | shadcn/ui (`components.json`), Radix primitives |
+| Icons      | Lucide (`strokeWidth` 1.5 in new UI) |
+| Motion     | GSAP 3 (button ripple, optional text hover) |
+| State      | Zustand (small global flags) |
+| Upload UX  | `react-dropzone` |
+
+## Getting started
+
+Requirements: **Node.js 20+** (matches `engines` expectations of current Next tooling).
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Command        | Description |
+|----------------|-------------|
+| `npm run dev`  | Next dev server (Turbopack) |
+| `npm run build`| Production build + typecheck |
+| `npm run start`| Serve production build |
+| `npm run lint` | ESLint |
 
-## Learn More
+## Project layout
 
-To learn more about Next.js, take a look at the following resources:
+```
+app/
+  layout.tsx      # Root layout, fonts, `dark` class for shadcn
+  page.tsx        # Home route
+  globals.css     # Stitch / GhostFile + shadcn semantic tokens
+components/
+  ui/             # shadcn-generated primitives (e.g. button)
+  custom/         # App-specific (dropzone, hover-radial-text, …)
+lib/
+  utils.ts        # `cn`, helpers
+store/
+  use-safemode-store.ts
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Design system
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Visual language follows **Google Stitch** project *GhostFile Binary Terminal*: charcoal surfaces, lime accent (`--primary` / `--gf-accent`), no pill radii on global tokens, monospace for machine-facing labels.
 
-## Deploy on Vercel
+When iterating UI in Cursor, you can align with Stitch via the **Stitch MCP** (design systems / screens) and keep tokens consistent with `app/globals.css`.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Agent / IDE notes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **`AGENTS.md`** — product vision, file-handling rules, and stack.
+- **`CLAUDE.md`** — includes `@AGENTS.md` for Claude-oriented workflows.
+- **`.cursorrules`** — Cursor-specific engineering rules for this repo.
+
+## License
+
+Private (`"private": true` in `package.json`). Add a license file if you open-source the project.

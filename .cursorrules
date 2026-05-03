@@ -1,0 +1,36 @@
+# GhostFile Project Rules (Next.js 15/16 + Binary Processing)
+
+## Tech Stack Preferences
+- Framework: Next.js 15+ (App Router)
+- Language: TypeScript (Strict mode)
+- Styling: Tailwind CSS 4+
+- Components: Lucide React for icons, Radix UI primitives
+- State Management: Zustand (only if needed, prefer React State/Context for local file flow)
+- Logic: High-performance binary processing (ArrayBuffer, TypedArrays, Web Workers)
+
+## Coding Standards
+- Use Server Components (RSC) by default. Use 'use client' only for interactivity (Dropzone, Canvas, Maps).
+- Use Server Actions for file metadata extraction that requires Node.js-only libraries.
+- For binary manipulation, prefer native JS (Uint8Array, DataView) over heavy libraries.
+- No 'any' type. Define strict interfaces for all file metadata and binary structures.
+
+## File Handling & Performance
+- Never block the main thread. If a file is > 10MB, suggest using a Web Worker.
+- Use ReadableStream for processing large files to keep memory usage low.
+- Always implement clean-up: Revoke object URLs (URL.revokeObjectURL) to prevent memory leaks.
+
+## UI/UX Guidelines (Industrial Tech Aesthetic)
+- Follow the "Engineering Brutalism" style: sharp borders, monospace fonts for data, high contrast.
+- Use Lucide icons with strokeWidth={1.5}.
+- Every action must have a clear loading state (Streaming SSR or skeleton).
+- Responsive design: Desktop-first (since it's an engineering tool), but mobile-friendly.
+
+## Specific Constraints for GhostFile
+- Detect file type by "Magic Numbers" (File Signatures), not just file extensions.
+- When extracting GPS, always prepare data in [lat, lng] format for Mapbox/Leaflet.
+- The "Purge" function must recreate the binary without metadata segments (e.g., stripping APP1 markers in JPEG).
+
+## Communication Style
+- Be concise. Don't explain basic React hooks unless asked.
+- If a suggested library is heavy, provide a lightweight native alternative.
+- Prioritize security: warn about potential XSS or malicious file structures.

@@ -1,26 +1,224 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@custom-variant dark (&:is(.dark *));
+
+/* -------------------------------------------------------------------------- */
+/* GhostFile — raw tokens (Stitch: “GhostFile Binary Terminal”)              */
+/* -------------------------------------------------------------------------- */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  color-scheme: dark;
+
+  --gf-background: #131313;
+  --gf-surface-dim: #131313;
+  --gf-surface-bright: #3a3939;
+  --gf-surface-container-lowest: #0e0e0e;
+  --gf-surface-container-low: #1c1b1b;
+  --gf-surface-container: #201f1f;
+  --gf-surface-container-high: #2a2a2a;
+  --gf-surface-container-highest: #353534;
+  --gf-surface-variant: #353534;
+
+  --gf-on-surface: #e5e2e1;
+  --gf-on-surface-variant: #c3caac;
+  --gf-inverse-surface: #e5e2e1;
+  --gf-inverse-on-surface: #313030;
+  --gf-outline: #8d9479;
+  --gf-outline-variant: #434933;
+  --gf-surface-tint: #a4d700;
+
+  --gf-primary: #ffffff;
+  --gf-on-primary: #263500;
+  --gf-primary-container: #bcf600;
+  --gf-on-primary-container: #526d00;
+  --gf-inverse-primary: #4d6700;
+
+  --gf-secondary: #c8c6c5;
+  --gf-on-secondary: #303030;
+  --gf-secondary-container: #474746;
+  --gf-on-secondary-container: #b7b5b4;
+
+  --gf-tertiary: #ffffff;
+  --gf-on-tertiary: #1f333f;
+  --gf-tertiary-container: #d0e5f6;
+  --gf-on-tertiary-container: #536775;
+
+  --gf-error: #ffb4ab;
+  --gf-on-error: #690005;
+  --gf-error-container: #93000a;
+  --gf-on-error-container: #ffdad6;
+
+  --gf-accent: #c3ff00;
+
+  /* Body stack — `--font-stitch-*` come from `next/font` on `<html>` */
+  --font-sans-stack: var(--font-stitch-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono-stack: var(--font-stitch-mono), ui-monospace, monospace;
+
+  /* ------------------------------------------------------------------------ */
+  /* shadcn semantic tokens → Stitch (dark-first, sharp, high contrast)      */
+  /* ------------------------------------------------------------------------ */
+
+  --background: var(--gf-background);
+  --foreground: var(--gf-on-surface);
+
+  --card: var(--gf-surface-container);
+  --card-foreground: var(--gf-on-surface);
+
+  --popover: var(--gf-surface-container-high);
+  --popover-foreground: var(--gf-on-surface);
+
+  /* Primary CTA: electric lime, text dark */
+  --primary: var(--gf-accent);
+  --primary-foreground: #131313;
+
+  --secondary: var(--gf-secondary-container);
+  --secondary-foreground: var(--gf-on-surface);
+
+  --muted: var(--gf-surface-container-high);
+  --muted-foreground: var(--gf-on-surface-variant);
+
+  --accent: var(--gf-surface-container-highest);
+  --accent-foreground: var(--gf-on-surface);
+
+  --destructive: var(--gf-error-container);
+  --border: var(--gf-outline-variant);
+  --input: color-mix(in srgb, var(--gf-outline) 65%, transparent);
+  --ring: var(--gf-accent);
+
+  --radius: 0;
+
+  /* Charts: lime + neutrals (Stitch / terminal) */
+  --chart-1: var(--gf-accent);
+  --chart-2: var(--gf-primary-container);
+  --chart-3: var(--gf-on-surface-variant);
+  --chart-4: var(--gf-outline);
+  --chart-5: var(--gf-secondary);
+
+  --sidebar: var(--gf-surface-container-low);
+  --sidebar-foreground: var(--gf-on-surface);
+  --sidebar-primary: var(--gf-accent);
+  --sidebar-primary-foreground: #131313;
+  --sidebar-accent: var(--gf-surface-container-high);
+  --sidebar-accent-foreground: var(--gf-on-surface);
+  --sidebar-border: var(--gf-outline-variant);
+  --sidebar-ring: var(--gf-accent);
+}
+
+.dark {
+  --background: var(--gf-background);
+  --foreground: var(--gf-on-surface);
+  --card: var(--gf-surface-container);
+  --card-foreground: var(--gf-on-surface);
+  --popover: var(--gf-surface-container-high);
+  --popover-foreground: var(--gf-on-surface);
+  --primary: var(--gf-accent);
+  --primary-foreground: #131313;
+  --secondary: var(--gf-secondary-container);
+  --secondary-foreground: var(--gf-on-surface);
+  --muted: var(--gf-surface-container-high);
+  --muted-foreground: var(--gf-on-surface-variant);
+  --accent: var(--gf-surface-container-highest);
+  --accent-foreground: var(--gf-on-surface);
+  --destructive: var(--gf-error-container);
+  --border: var(--gf-outline-variant);
+  --input: color-mix(in srgb, var(--gf-outline) 65%, transparent);
+  --ring: var(--gf-accent);
+  --chart-1: var(--gf-accent);
+  --chart-2: var(--gf-primary-container);
+  --chart-3: var(--gf-on-surface-variant);
+  --chart-4: var(--gf-outline);
+  --chart-5: var(--gf-secondary);
+  --sidebar: var(--gf-surface-container-low);
+  --sidebar-foreground: var(--gf-on-surface);
+  --sidebar-primary: var(--gf-accent);
+  --sidebar-primary-foreground: #131313;
+  --sidebar-accent: var(--gf-surface-container-high);
+  --sidebar-accent-foreground: var(--gf-on-surface);
+  --sidebar-border: var(--gf-outline-variant);
+  --sidebar-ring: var(--gf-accent);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
+
+  --color-sidebar: var(--sidebar);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* GhostFile extras (optional utilities) */
+  --color-on-surface-variant: var(--gf-on-surface-variant);
+  --color-outline: var(--gf-outline);
+  --color-outline-variant: var(--gf-outline-variant);
+  --color-primary-container: var(--gf-primary-container);
+  --color-on-primary-container: var(--gf-on-primary-container);
+
+  --font-sans: var(--font-sans-stack);
+  --font-mono: var(--font-mono-stack);
+  --font-heading: var(--font-sans-stack);
+
+  --radius-sm: 0;
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
+
+  --spacing-gutter: 2px;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--background);
 }
 
 body {
-  background: var(--background);
+  font-family: var(--font-sans-stack);
+  font-feature-settings: "ss01" 1;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--gf-accent) 35%, transparent);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  html {
+    @apply font-sans;
+  }
 }

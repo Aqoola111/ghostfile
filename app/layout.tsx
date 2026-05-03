@@ -1,15 +1,20 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
+import { cn } from "@/lib/utils";
 import "./globals.css";
+import Link from "next/link";
+import SafeModeToggle from "@/components/custom/safe-mode-toggle";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const spaceGrotesk = Space_Grotesk({
+  variable: "--font-stitch-sans",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
+const jetbrainsMono = JetBrains_Mono({
+  variable: "--font-stitch-mono",
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -25,9 +30,31 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      suppressHydrationWarning
+      className={cn(
+        "dark",
+        "h-full antialiased",
+        spaceGrotesk.variable,
+        jetbrainsMono.variable,
+      )}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col font-sans">
+        <nav className="border-b">
+          <div className="max-w-[1440px] mx-auto w-full px-4 py-2 flex justify-between items-center">
+            <Link
+              href="/"
+              className="font-bold text-4xl hover:text-primary transition-colors"
+            >
+              GhostFile
+              <span className="text-sm text-muted-foreground ml-2">
+                v.1.0.0
+              </span>
+            </Link>
+            <SafeModeToggle />
+          </div>
+        </nav>
+        <main className="flex-1 flex">{children}</main>
+      </body>
     </html>
   );
 }

@@ -34,3 +34,5 @@
 - Be concise. Don't explain basic React hooks unless asked.
 - If a suggested library is heavy, provide a lightweight native alternative.
 - Prioritize security: warn about potential XSS or malicious file structures.
+
+- Comments in code only in English

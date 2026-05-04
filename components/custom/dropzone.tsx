@@ -3,17 +3,51 @@
 import { useCallback } from "react";
 import Dropzone, { type DropEvent, type FileRejection } from "react-dropzone";
 import { Upload } from "lucide-react";
+import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
 import { HoverRadialText } from "@/components/custom/hover-radial-text";
 import { cn } from "@/lib/utils";
 
-export default function Dropdown() {
+export interface DropzoneProps {
+  onSuccess?: (files: File[]) => void;
+  onError?: (error: Error) => void;
+}
+
+export default function Dropdown({ onSuccess, onError }: DropzoneProps) {
   const onDrop = useCallback(
-    (acceptedFiles: File[], fileRejections: FileRejection[], event: DropEvent) => {
-      console.log(acceptedFiles, fileRejections, event);
+    (
+      acceptedFiles: File[],
+      fileRejections: FileRejection[],
+      event: DropEvent,
+    ) => {
+      if (acceptedFiles.length > 0) {
+        onSuccess?.(acceptedFiles);
+      } else if (fileRejections.length > 0) {
+        onError?.(new Error("No files accepted (rejected by rules)"));
+      }
+      if (fileRejections.length > 0) {
+        const first = fileRejections[0];
+        const msg =
+          first.errors[0]?.message ??
+          (first.errors[0]?.code === "file-invalid-type"
+            ? "File type not allowed"
+            : "Rejected by drop rules");
+        const extra =
+          fileRejections.length > 1
+            ? ` (+${fileRejections.length - 1} more)`
+            : "";
+        toast.warning(
+          acceptedFiles.length > 0
+            ? "Some files were skipped"
+            : "Files not accepted",
+          {
+            description: `${first.file.name}: ${msg}${extra}`,
+          },
+        );
+      }
     },
-    [],
+    [onSuccess, onError],
   );
 
   return (
@@ -26,7 +60,9 @@ export default function Dropdown() {
         open,
         rootRef,
       }) => {
-        const title = isDragActive ? "Release to analyze" : "Drop a file to inspect";
+        const title = isDragActive
+          ? "Release to analyze"
+          : "Drop a file to inspect";
         return (
           <div className="w-full max-w-3xl">
             <div
@@ -91,8 +127,8 @@ export default function Dropdown() {
                   toColor="var(--primary)"
                   className="font-sans text-sm leading-relaxed text-muted-foreground"
                 >
-                  Binary fingerprint, metadata, and purge run client-side only. No upload
-                  to a server.
+                  Binary fingerprint, metadata, and purge run client-side only.
+                  No upload to a server.
                 </HoverRadialText>
               </div>
 

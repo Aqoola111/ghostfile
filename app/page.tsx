@@ -1,9 +1,9 @@
-import Dropdown from "@/components/custom/dropzone";
+import HomeWorkspace from "@/components/custom/home-workspace";
 
 export default function Home() {
   return (
-    <div className="max-w-[1440px] mx-auto w-full px-4 py-2 flex items-center justify-center">
-      <Dropdown />
+    <div className="flex h-full min-h-0 flex-1 basis-0 flex-col overflow-hidden">
+      <HomeWorkspace />
     </div>
   );
 }

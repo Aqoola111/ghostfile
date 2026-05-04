@@ -8,68 +8,64 @@
 /* GhostFile — raw tokens (Stitch: “GhostFile Binary Terminal”)              */
 /* -------------------------------------------------------------------------- */
 
+/* Light — neutral chrome; chroma only on `--primary` / text ramp */
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 
-  --gf-background: #131313;
-  --gf-surface-dim: #131313;
-  --gf-surface-bright: #3a3939;
-  --gf-surface-container-lowest: #0e0e0e;
-  --gf-surface-container-low: #1c1b1b;
-  --gf-surface-container: #201f1f;
-  --gf-surface-container-high: #2a2a2a;
-  --gf-surface-container-highest: #353534;
-  --gf-surface-variant: #353534;
+  --gf-background: #f0f0f0;
+  --gf-surface-dim: #ebebeb;
+  --gf-surface-bright: #fafafa;
+  --gf-surface-container-lowest: #ffffff;
+  --gf-surface-container-low: #e6e6e6;
+  --gf-surface-container: #dedede;
+  --gf-surface-container-high: #d6d6d6;
+  --gf-surface-container-highest: #cfcfcf;
+  --gf-surface-variant: #c7c7c7;
 
-  --gf-on-surface: #e5e2e1;
-  --gf-on-surface-variant: #c3caac;
-  --gf-inverse-surface: #e5e2e1;
-  --gf-inverse-on-surface: #313030;
-  --gf-outline: #8d9479;
-  --gf-outline-variant: #434933;
-  --gf-surface-tint: #a4d700;
+  --gf-on-surface: #121212;
+  --gf-on-surface-variant: #5a5a5a;
+  --gf-inverse-surface: #1a1a1a;
+  --gf-inverse-on-surface: #f5f5f5;
+  --gf-outline: #a3a3a3;
+  --gf-outline-variant: #d0d0d0;
+  --gf-surface-tint: #737373;
 
-  --gf-primary: #ffffff;
-  --gf-on-primary: #263500;
-  --gf-primary-container: #bcf600;
-  --gf-on-primary-container: #526d00;
-  --gf-inverse-primary: #4d6700;
+  --gf-primary: #121212;
+  --gf-on-primary: #fafafa;
+  --gf-primary-container: #e8e8e8;
+  --gf-on-primary-container: #2a2a2a;
+  --gf-inverse-primary: #c3ff00;
 
-  --gf-secondary: #c8c6c5;
-  --gf-on-secondary: #303030;
-  --gf-secondary-container: #474746;
-  --gf-on-secondary-container: #b7b5b4;
+  --gf-secondary: #3f3f3f;
+  --gf-on-secondary: #fafafa;
+  --gf-secondary-container: #d8d8d8;
+  --gf-on-secondary-container: #1f1f1f;
 
-  --gf-tertiary: #ffffff;
-  --gf-on-tertiary: #1f333f;
-  --gf-tertiary-container: #d0e5f6;
-  --gf-on-tertiary-container: #536775;
+  --gf-tertiary: #2a2a2a;
+  --gf-on-tertiary: #fafafa;
+  --gf-tertiary-container: #e0e0e0;
+  --gf-on-tertiary-container: #242424;
 
-  --gf-error: #ffb4ab;
-  --gf-on-error: #690005;
-  --gf-error-container: #93000a;
-  --gf-on-error-container: #ffdad6;
+  --gf-error: #b3261e;
+  --gf-on-error: #ffffff;
+  --gf-error-container: #f2dedc;
+  --gf-on-error-container: #410002;
 
-  --gf-accent: #c3ff00;
+  --gf-accent: #8fb800;
 
   /* Body stack — `--font-stitch-*` come from `next/font` on `<html>` */
   --font-sans-stack: var(--font-stitch-sans), ui-sans-serif, system-ui, sans-serif;
   --font-mono-stack: var(--font-stitch-mono), ui-monospace, monospace;
 
-  /* ------------------------------------------------------------------------ */
-  /* shadcn semantic tokens → Stitch (dark-first, sharp, high contrast)      */
-  /* ------------------------------------------------------------------------ */
-
   --background: var(--gf-background);
   --foreground: var(--gf-on-surface);
 
-  --card: var(--gf-surface-container);
+  --card: var(--gf-surface-container-low);
   --card-foreground: var(--gf-on-surface);
 
-  --popover: var(--gf-surface-container-high);
+  --popover: var(--gf-surface-container);
   --popover-foreground: var(--gf-on-surface);
 
-  /* Primary CTA: electric lime, text dark */
   --primary: var(--gf-accent);
   --primary-foreground: #131313;
 
@@ -82,19 +78,18 @@
   --accent: var(--gf-surface-container-highest);
   --accent-foreground: var(--gf-on-surface);
 
-  --destructive: var(--gf-error-container);
+  --destructive: var(--gf-error);
   --border: var(--gf-outline-variant);
-  --input: color-mix(in srgb, var(--gf-outline) 65%, transparent);
+  --input: color-mix(in srgb, var(--gf-on-surface) 12%, transparent);
   --ring: var(--gf-accent);
 
   --radius: 0;
 
-  /* Charts: lime + neutrals (Stitch / terminal) */
   --chart-1: var(--gf-accent);
-  --chart-2: var(--gf-primary-container);
+  --chart-2: #8a8a8a;
   --chart-3: var(--gf-on-surface-variant);
-  --chart-4: var(--gf-outline);
-  --chart-5: var(--gf-secondary);
+  --chart-4: #6b6b6b;
+  --chart-5: #4a4a4a;
 
   --sidebar: var(--gf-surface-container-low);
   --sidebar-foreground: var(--gf-on-surface);
@@ -106,30 +101,83 @@
   --sidebar-ring: var(--gf-accent);
 }
 
-.dark {
+/* Dark — neutral zinc chrome; chroma only on `--primary` + text ramp */
+html.dark {
+  color-scheme: dark;
+
+  --gf-background: #080808;
+  --gf-surface-dim: #070707;
+  --gf-surface-bright: #242424;
+  --gf-surface-container-lowest: #040404;
+  --gf-surface-container-low: #0c0c0c;
+  --gf-surface-container: #111111;
+  --gf-surface-container-high: #171717;
+  --gf-surface-container-highest: #1d1d1d;
+  --gf-surface-variant: #222222;
+
+  --gf-on-surface: #ececec;
+  --gf-on-surface-variant: #9a9a98;
+  --gf-inverse-surface: #ececec;
+  --gf-inverse-on-surface: #1a1a1a;
+  --gf-outline: #3f3f3f;
+  --gf-outline-variant: #262626;
+  --gf-surface-tint: #525252;
+
+  --gf-primary: #ececec;
+  --gf-on-primary: #141414;
+  --gf-primary-container: #2a2a2a;
+  --gf-on-primary-container: #dcdcdc;
+  --gf-inverse-primary: #c3ff00;
+
+  --gf-secondary: #a8a8a6;
+  --gf-on-secondary: #141414;
+  --gf-secondary-container: #222222;
+  --gf-on-secondary-container: #d6d6d4;
+
+  --gf-tertiary: #c4c4c2;
+  --gf-on-tertiary: #141414;
+  --gf-tertiary-container: #262626;
+  --gf-on-tertiary-container: #e0e0de;
+
+  --gf-error: #f2b8b5;
+  --gf-on-error: #601410;
+  --gf-error-container: #8c1d18;
+  --gf-on-error-container: #fdecea;
+
+  --gf-accent: #c3ff00;
+
   --background: var(--gf-background);
   --foreground: var(--gf-on-surface);
+
   --card: var(--gf-surface-container);
   --card-foreground: var(--gf-on-surface);
+
   --popover: var(--gf-surface-container-high);
   --popover-foreground: var(--gf-on-surface);
+
   --primary: var(--gf-accent);
   --primary-foreground: #131313;
+
   --secondary: var(--gf-secondary-container);
   --secondary-foreground: var(--gf-on-surface);
+
   --muted: var(--gf-surface-container-high);
   --muted-foreground: var(--gf-on-surface-variant);
+
   --accent: var(--gf-surface-container-highest);
   --accent-foreground: var(--gf-on-surface);
+
   --destructive: var(--gf-error-container);
   --border: var(--gf-outline-variant);
-  --input: color-mix(in srgb, var(--gf-outline) 65%, transparent);
+  --input: color-mix(in srgb, var(--gf-on-surface) 14%, transparent);
   --ring: var(--gf-accent);
+
   --chart-1: var(--gf-accent);
-  --chart-2: var(--gf-primary-container);
+  --chart-2: #737373;
   --chart-3: var(--gf-on-surface-variant);
-  --chart-4: var(--gf-outline);
-  --chart-5: var(--gf-secondary);
+  --chart-4: #525252;
+  --chart-5: #3a3a3a;
+
   --sidebar: var(--gf-surface-container-low);
   --sidebar-foreground: var(--gf-on-surface);
   --sidebar-primary: var(--gf-accent);
@@ -221,4 +269,44 @@ body {
   html {
     @apply font-sans;
   }
+}
+
+/* Левая панель очереди: тонкий скроллбар в палитре GhostFile */
+.gf-queue-scroll {
+  scrollbar-gutter: stable;
+  scrollbar-width: thin;
+  scrollbar-color: color-mix(in srgb, var(--gf-accent) 55%, var(--border)) var(--muted);
+}
+
+.gf-queue-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+
+.gf-queue-scroll::-webkit-scrollbar-track {
+  background: color-mix(in srgb, var(--muted) 85%, transparent);
+}
+
+.gf-queue-scroll::-webkit-scrollbar-thumb {
+  background: color-mix(in srgb, var(--gf-accent) 40%, var(--gf-on-surface-variant));
+  border-radius: 0;
+  border: 1px solid color-mix(in srgb, var(--border) 80%, transparent);
+}
+
+.gf-queue-scroll::-webkit-scrollbar-thumb:hover {
+  background: color-mix(in srgb, var(--gf-accent) 65%, var(--gf-on-surface-variant));
+}
+
+/* Sonner — типы подчёркиваем акцентом терминала */
+[data-sonner-toast][data-type="success"] {
+  box-shadow:
+    inset 0 0 0 1px color-mix(in srgb, var(--gf-accent) 22%, transparent),
+    0 0 0 1px color-mix(in srgb, var(--gf-accent) 18%, transparent);
+}
+
+[data-sonner-toast][data-type="warning"] {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--gf-on-surface-variant) 35%, transparent);
+}
+
+[data-sonner-toast][data-type="error"] {
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--destructive) 45%, transparent);
 }

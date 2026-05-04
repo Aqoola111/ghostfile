@@ -1,9 +1,14 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
-import { cn } from "@/lib/utils";
-import "./globals.css";
 import Link from "next/link";
+
 import SafeModeToggle from "@/components/custom/safe-mode-toggle";
+import ThemeToggle from "@/components/custom/theme-toggle";
+import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
+import { cn } from "@/lib/utils";
+
+import "./globals.css";
 
 const spaceGrotesk = Space_Grotesk({
   variable: "--font-stitch-sans",
@@ -32,28 +37,35 @@ export default function RootLayout({
       lang="en"
       suppressHydrationWarning
       className={cn(
-        "dark",
-        "h-full antialiased",
+        "h-dvh min-h-0 overflow-hidden antialiased",
         spaceGrotesk.variable,
         jetbrainsMono.variable,
       )}
     >
-      <body className="min-h-full flex flex-col font-sans">
-        <nav className="border-b">
-          <div className="max-w-[1440px] mx-auto w-full px-4 py-2 flex justify-between items-center">
-            <Link
-              href="/"
-              className="font-bold text-4xl hover:text-primary transition-colors"
-            >
-              GhostFile
-              <span className="text-sm text-muted-foreground ml-2">
-                v.1.0.0
-              </span>
-            </Link>
-            <SafeModeToggle />
-          </div>
-        </nav>
-        <main className="flex-1 flex">{children}</main>
+      <body className="flex h-dvh min-h-0 max-h-dvh flex-col overflow-hidden font-sans">
+        <ThemeProvider>
+          <nav className="shrink-0 border-b">
+            <div className="max-w-[1440px] mx-auto w-full px-4 py-2 flex justify-between items-center">
+              <Link
+                href="/"
+                className="font-bold text-4xl hover:text-primary transition-colors"
+              >
+                GhostFile
+                <span className="text-sm text-muted-foreground ml-2">
+                  v.1.0.0
+                </span>
+              </Link>
+              <div className="flex items-center gap-2 sm:gap-3">
+                <ThemeToggle />
+                <SafeModeToggle />
+              </div>
+            </div>
+          </nav>
+          <main className="flex min-h-0 flex-1 basis-0 flex-col overflow-hidden">
+            {children}
+          </main>
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   );

@@ -7,6 +7,9 @@ import { usePanelRef } from "react-resizable-panels";
 import Dropdown from "@/components/custom/dropzone";
 import FileQueueAddStrip from "@/components/custom/file-queue-add-strip";
 import FileQueuePanel from "@/components/custom/file-queue-panel";
+import InspectorPanel from "@/components/custom/inspector-panel";
+import RailScrollBody from "@/components/custom/rail-scroll-body";
+import ToolsPanel from "@/components/custom/tools-panel";
 import { Button } from "@/components/ui/button";
 import {
   ResizableHandle,
@@ -14,8 +17,10 @@ import {
   ResizablePanelGroup,
 } from "@/components/ui/resizable";
 import { appendStagedFiles, clearAllStagedFiles } from "@/lib/file-queue-sync";
+import { useMediaQuery } from "@/hooks/use-media-query";
 import { cn } from "@/lib/utils";
 import { useFileStore } from "@/store/use-store-files";
+import { useWorkspaceUi } from "@/store/use-workspace-ui";
 
 /** `ingress` — полноэкранный дроп; `workspace` — панели. */
 type Phase = "ingress" | "workspace";
@@ -26,8 +31,8 @@ function panelShell({
   content,
   footer,
   railResizeHint,
-  /** Скроллбар слева (RTL-обёртка), чтобы не перекрывать иконки справа. */
-  scrollOpposite,
+  railScroll,
+  bodyVariant = "scroll",
 }: {
   title: string;
   subtitle: string;
@@ -36,7 +41,10 @@ function panelShell({
   footer?: ReactNode;
   /** Collapsible side rails: show affordance for drag-to-collapse */
   railResizeHint?: boolean;
-  scrollOpposite?: boolean;
+  /** Левая/правая колонка: скролл без полос при свёрнутом rail */
+  railScroll?: "queue" | "tools";
+  /** `fill` — колонка растягивает контент (инспектор + превью), без общего scroll body */
+  bodyVariant?: "scroll" | "fill";
 }) {
   return (
     <div
@@ -65,16 +73,20 @@ function panelShell({
       </header>
       <div
         className={cn(
-          "flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden overflow-y-auto overscroll-y-contain font-mono text-xs text-muted-foreground",
-          scrollOpposite
-            ? "gf-queue-scroll p-3 [direction:rtl]"
-            : "p-3",
+          "flex min-h-0 min-w-0 flex-1 flex-col overflow-x-hidden font-mono text-xs text-muted-foreground",
+          bodyVariant === "fill"
+            ? "min-h-0 overflow-hidden p-3"
+            : railScroll
+              ? "min-h-0 overflow-hidden"
+              : cn("overflow-y-auto overscroll-y-contain p-3"),
         )}
       >
-        {scrollOpposite ? (
-          <div className="min-w-0 w-full text-left [direction:ltr]">
+        {bodyVariant === "fill" ? (
+          (content ?? <p className="whitespace-pre-wrap">[placeholder]</p>)
+        ) : railScroll ? (
+          <RailScrollBody rtlScrollbar={railScroll === "queue"}>
             {content ?? <p className="whitespace-pre-wrap">[placeholder]</p>}
-          </div>
+          </RailScrollBody>
         ) : (
           (content ?? <p className="whitespace-pre-wrap">[placeholder]</p>)
         )}
@@ -101,6 +113,9 @@ export default function HomeWorkspace() {
   const toolsPanelRef = usePanelRef();
   const loadFromDexie = useFileStore((s) => s.loadFromDexie);
   const queueEmpty = useFileStore((s) => s.stagedFiles.length === 0);
+  const stagedFiles = useFileStore((s) => s.stagedFiles);
+  const selectedEntryId = useWorkspaceUi((s) => s.selectedEntryId);
+  const setSelectedEntryId = useWorkspaceUi((s) => s.setSelectedEntryId);
 
   useEffect(() => {
     let cancelled = false;
@@ -116,13 +131,23 @@ export default function HomeWorkspace() {
     };
   }, [loadFromDexie]);
 
+  useEffect(() => {
+    if (!selectedEntryId) return;
+    if (!stagedFiles.some((e) => e.id === selectedEntryId)) {
+      setSelectedEntryId(null);
+    }
+  }, [stagedFiles, selectedEntryId, setSelectedEntryId]);
+
   const handleAccepted = useCallback(async (files: File[]) => {
     await appendStagedFiles(files);
     setPhase("workspace");
   }, []);
 
+  /** Вертикальный стек только на узких экранах; планшеты остаются в 3 колонки как раньше */
+  const stackWorkspacePanels = useMediaQuery("(max-width: 639px)");
+
   return (
-    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1800px] flex-1 basis-0 flex-col overflow-hidden px-4 py-2">
+    <div className="mx-auto flex h-full min-h-0 w-full max-w-[1800px] flex-1 basis-0 flex-col overflow-hidden px-3 py-2 sm:px-4">
       {!uiReady ? (
         <div className="flex min-h-[min(40dvh,280px)] flex-1 flex-col items-center justify-center">
           <p className="font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
@@ -135,17 +160,22 @@ export default function HomeWorkspace() {
         </div>
       ) : (
         <div className="flex h-full min-h-0 flex-1 basis-0 flex-col gap-2 overflow-hidden">
-          <div className="flex shrink-0 items-center justify-between gap-3 border-2 border-border bg-card px-3 py-2">
-            <p className="flex items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
-              <GripVertical className="size-4 text-primary/80" strokeWidth={2} aria-hidden />
-              <span>session — drag column grips to resize</span>
+          <div className="flex shrink-0 flex-col gap-2 border-2 border-border bg-card px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-3">
+            <p className="flex min-h-0 items-center gap-2 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-muted-foreground">
+              <GripVertical className="size-4 shrink-0 text-primary/80" strokeWidth={2} aria-hidden />
+              <span className="leading-snug max-[639px]:text-[9px]">
+                <span className="hidden sm:inline">
+                  session — drag column grips to resize
+                </span>
+                <span className="sm:hidden">Drag edges to resize panels</span>
+              </span>
             </p>
-            <div className="flex shrink-0 flex-wrap items-center justify-end gap-2">
+            <div className="flex w-full shrink-0 flex-col gap-2 min-[400px]:flex-row min-[400px]:flex-wrap min-[400px]:justify-end sm:w-auto">
               <Button
                 type="button"
                 variant="outline"
                 size="sm"
-                className="rounded-none border-2 font-mono text-xs"
+                className="min-h-11 touch-manipulation rounded-none border-2 font-mono text-xs sm:min-h-9"
                 onClick={() => setPhase("ingress")}
               >
                 Add more files
@@ -155,7 +185,7 @@ export default function HomeWorkspace() {
                 variant="destructive"
                 size="sm"
                 disabled={queueEmpty}
-                className="rounded-none border-2 font-mono text-xs"
+                className="min-h-11 touch-manipulation rounded-none border-2 font-mono text-xs sm:min-h-9"
                 onClick={() => void clearAllStagedFiles()}
               >
                 Delete all files
@@ -163,17 +193,22 @@ export default function HomeWorkspace() {
             </div>
           </div>
 
+          {/* v4: numeric panel sizes are px — use "%" strings for fractions of the group */}
           <ResizablePanelGroup
-            orientation="horizontal"
-            className="flex h-full min-h-0 min-w-0 flex-1 basis-0 overflow-hidden rounded-none"
+            key={stackWorkspacePanels ? "stack" : "row"}
+            orientation={stackWorkspacePanels ? "vertical" : "horizontal"}
+            className={cn(
+              "flex h-full min-h-0 min-w-0 flex-1 basis-0 overflow-hidden rounded-none",
+              stackWorkspacePanels && "touch-pan-y",
+            )}
           >
             <ResizablePanel
               id="queue"
               panelRef={queuePanelRef}
-              defaultSize={200}
-              minSize={300}
-              maxSize={400}
-              collapsedSize={10}
+              defaultSize={stackWorkspacePanels ? "30%" : "22%"}
+              minSize={stackWorkspacePanels ? "18%" : "14%"}
+              maxSize={stackWorkspacePanels ? "44%" : "38%"}
+              collapsedSize="10%"
               collapsible
               className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden"
             >
@@ -181,7 +216,7 @@ export default function HomeWorkspace() {
                 title: "File queue",
                 subtitle: "left.rail",
                 railResizeHint: true,
-                scrollOpposite: true,
+                railScroll: "queue",
                 content: <FileQueuePanel />,
                 footer: <FileQueueAddStrip />,
               })}
@@ -199,11 +234,16 @@ export default function HomeWorkspace() {
 
             <ResizablePanel
               id="inspector"
-              defaultSize={42}
-              minSize={32}
+              defaultSize={stackWorkspacePanels ? "46%" : "52%"}
+              minSize={stackWorkspacePanels ? "32%" : "30%"}
               className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden"
             >
-              {panelShell({ title: "Inspector", subtitle: "center.stage" })}
+              {panelShell({
+                title: "Inspector",
+                subtitle: "center.stage",
+                bodyVariant: "fill",
+                content: <InspectorPanel />,
+              })}
             </ResizablePanel>
 
             <ResizableHandle
@@ -219,10 +259,10 @@ export default function HomeWorkspace() {
             <ResizablePanel
               id="tools"
               panelRef={toolsPanelRef}
-              defaultSize={120}
-              minSize={120}
-              maxSize={200}
-              collapsedSize={10}
+              defaultSize={stackWorkspacePanels ? "24%" : "26%"}
+              minSize="14%"
+              maxSize="40%"
+              collapsedSize="10%"
               collapsible
               className="flex h-full min-h-0 min-w-0 flex-col overflow-hidden"
             >
@@ -230,6 +270,8 @@ export default function HomeWorkspace() {
                 title: "Actions & tools",
                 subtitle: "right.rail",
                 railResizeHint: true,
+                railScroll: "tools",
+                content: <ToolsPanel />,
               })}
             </ResizablePanel>
           </ResizablePanelGroup>

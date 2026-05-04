@@ -13,22 +13,13 @@ import {
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { formatBytes } from "@/lib/format-bytes";
 import { removeStagedFileById } from "@/lib/file-queue-sync";
 import { cn } from "@/lib/utils";
 import type { StagedFileEntry } from "@/store/use-store-files";
+import { useWorkspaceUi } from "@/store/use-workspace-ui";
 
 const REMOVE_MS = 240;
-
-function formatBytes(bytes: number): string {
-  if (bytes === 0) return "0 B";
-  const k = 1024;
-  const sizes = ["B", "KB", "MB", "GB"] as const;
-  const i = Math.min(
-    sizes.length - 1,
-    Math.floor(Math.log(bytes) / Math.log(k)),
-  );
-  return `${parseFloat((bytes / k ** i).toFixed(i > 0 ? 1 : 0))} ${sizes[i]}`;
-}
 
 function QueueFileIcon({ file }: { file: File }) {
   const mime = file.type.toLowerCase();
@@ -76,6 +67,9 @@ function QueueFileIcon({ file }: { file: File }) {
 
 export default function FileCard({ entry }: { entry: StagedFileEntry }) {
   const { id, file } = entry;
+  const selectedEntryId = useWorkspaceUi((s) => s.selectedEntryId);
+  const setSelectedEntryId = useWorkspaceUi((s) => s.setSelectedEntryId);
+  const isSelected = selectedEntryId === id;
   const [exiting, setExiting] = useState(false);
   const timerRef = useRef<number | null>(null);
 
@@ -97,9 +91,20 @@ export default function FileCard({ entry }: { entry: StagedFileEntry }) {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      onClick={() => setSelectedEntryId(id)}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          setSelectedEntryId(id);
+        }
+      }}
       className={cn(
-        "group flex gap-3 border-2 border-border bg-card/80 p-2.5 pr-1 transition-[transform,opacity,filter] duration-200 ease-out",
+        "group flex cursor-pointer gap-3 border-2 border-border bg-card/80 p-2.5 pr-1 transition-[transform,opacity,filter,border-color,box-shadow] duration-200 ease-out",
         "hover:border-primary/40 hover:bg-card",
+        isSelected &&
+          "border-primary/70 bg-card shadow-[inset_0_0_0_1px_color-mix(in_srgb,var(--gf-accent)_22%,transparent)]",
         exiting && "pointer-events-none translate-x-3 scale-[0.96] opacity-0 blur-[0.5px]",
       )}
     >
@@ -122,7 +127,10 @@ export default function FileCard({ entry }: { entry: StagedFileEntry }) {
         className="size-8 shrink-0 rounded-none text-muted-foreground hover:bg-destructive/15 hover:text-destructive"
         aria-label={`Remove ${file.name}`}
         disabled={exiting}
-        onClick={runRemove}
+        onClick={(e) => {
+          e.stopPropagation();
+          runRemove();
+        }}
       >
         <Trash2 className="size-4" strokeWidth={2} />
       </Button>

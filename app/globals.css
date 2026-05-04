@@ -273,7 +273,7 @@ body {
 
 /* Левая панель очереди: тонкий скроллбар в палитре GhostFile */
 .gf-queue-scroll {
-  scrollbar-gutter: stable;
+  scrollbar-gutter: auto;
   scrollbar-width: thin;
   scrollbar-color: color-mix(in srgb, var(--gf-accent) 55%, var(--border)) var(--muted);
 }

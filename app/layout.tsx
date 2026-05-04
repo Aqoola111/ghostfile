@@ -45,17 +45,17 @@ export default function RootLayout({
       <body className="flex h-dvh min-h-0 max-h-dvh flex-col overflow-hidden font-sans">
         <ThemeProvider>
           <nav className="shrink-0 border-b">
-            <div className="max-w-[1440px] mx-auto w-full px-4 py-2 flex justify-between items-center">
+            <div className="mx-auto flex w-full max-w-[1440px] flex-col gap-3 px-3 py-2 sm:flex-row sm:items-center sm:justify-between sm:gap-2 sm:px-4">
               <Link
                 href="/"
-                className="font-bold text-4xl hover:text-primary transition-colors"
+                className="font-bold text-2xl transition-colors hover:text-primary sm:text-4xl"
               >
                 GhostFile
-                <span className="text-sm text-muted-foreground ml-2">
+                <span className="ml-2 text-xs text-muted-foreground sm:text-sm">
                   v.1.0.0
                 </span>
               </Link>
-              <div className="flex items-center gap-2 sm:gap-3">
+              <div className="flex shrink-0 items-center justify-end gap-2 sm:gap-3">
                 <ThemeToggle />
                 <SafeModeToggle />
               </div>
